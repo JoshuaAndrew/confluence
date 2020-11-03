@@ -1,0 +1,6 @@
+url: jdbc:mysql://mysql:3306/confluence?useUnicode=true&verifyServerCertificate=false&useSSL=false
+username: confluence
+password: confluence
+
+
+mysql -hmysql -uconfluence -pconfluence
