@@ -2,45 +2,44 @@ version: '2'
 
 services:
   confluence:
-    image: teamatldocker/confluence
+    image: joshuaandrew/confluence:v7.7.4
     container_name: confluence
     hostname: confluence
     networks:
       - confluencenet
     volumes:
-      - confluencedata:/var/atlassian/confluence
+      - ./data/confluence:/var/atlassian/confluence
+      - /etc/localtime:/etc/localtime
     ports:
-      - '80:8090'
+      - '8090:8090'
       - '8091:8091'
     environment:
-      - 'CATALINA_OPTS= -Xms256m -Xmx1g'
+      - 'CATALINA_OPTS= -Xms2g -Xmx2g -XX:PermSize=256m -XX:MaxPermSize=512m'
       - 'CONFLUENCE_PROXY_NAME='
       - 'CONFLUENCE_PROXY_PORT='
       - 'CONFLUENCE_PROXY_SCHEME='
       - 'CONFLUENCE_DELAYED_START='
+      - 'DOCKER_WAIT_HOST=mysql'
+      - 'DOCKER_WAIT_PORT=3306'
+      - 'DOCKER_WAIT_TIMEOUT=600'
+      - 'DOCKER_WAIT_INTERVAL=10'
 
-  postgresql:
-    image: postgres:9.5-alpine
-    container_name: postgres
-    hostname: postgres
+  mysql:
+    image: mysql:5.7.32
+    container_name: mysql
+    hostname: mysql
     networks:
       - confluencenet
     volumes:
-      - postgresqldata:/var/lib/postgresql/data
+      - ./data/conf.d:/etc/mysql/conf.d
+      - ./data/mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime
     environment:
-      - 'POSTGRES_USER=confluencedb'
-      # CHANGE THE PASSWORD!
-      - 'POSTGRES_PASSWORD=jellyfish'
-      - 'POSTGRES_DB=confluencedb'
-      - 'POSTGRES_ENCODING=UTF8'
-      - 'POSTGRES_COLLATE=C'
-      - 'POSTGRES_COLLATE_TYPE=C'
+      - 'MYSQL_ROOT_PASSWORD=confluence'
+      - 'MYSQL_DATABASE=confluence'
+      - 'MYSQL_USER=confluence'
+      - 'MYSQL_PASSWORD=confluence'
 
-volumes:
-  confluencedata:
-    external: false
-  postgresqldata:
-    external: false
 
 networks:
   confluencenet:
