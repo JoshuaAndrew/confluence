@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  confluence:
+    image: joshuaandrew/confluence:v7.7.4
+    container_name: confluence
+    hostname: confluence
+    networks:
+      - confluencenet
+    volumes:
+      - ./data/confluence:/var/atlassian/confluence
+      - /etc/localtime:/etc/localtime
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    environment:
+      - 'CATALINA_OPTS= -Xms2g -Xmx2g -XX:PermSize=256m -XX:MaxPermSize=512m'
+      - 'CONFLUENCE_PROXY_NAME='
+      - 'CONFLUENCE_PROXY_PORT='
+      - 'CONFLUENCE_PROXY_SCHEME='
+      - 'CONFLUENCE_DELAYED_START='
+      - 'DOCKER_WAIT_HOST=mysql'
+      - 'DOCKER_WAIT_PORT=3306'
+      - 'DOCKER_WAIT_TIMEOUT=600'
+      - 'DOCKER_WAIT_INTERVAL=10'
+
+  mysql:
+    image: mysql:5.7.32
+    container_name: mysql
+    hostname: mysql
+    networks:
+      - confluencenet
+    volumes:
+      - ./data/conf.d:/etc/mysql/conf.d
+      - ./data/mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=confluence'
+      - 'MYSQL_DATABASE=confluence'
+      - 'MYSQL_USER=confluence'
+      - 'MYSQL_PASSWORD=confluence'
+
+
+networks:
+  confluencenet:
+    driver: bridge

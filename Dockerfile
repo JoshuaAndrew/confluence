@@ -115,6 +115,10 @@ COPY bin/dockerwait.sh /usr/bin/dockerwait
 ENTRYPOINT ["/sbin/tini","--","/home/confluence/docker-entrypoint.sh"]
 CMD ["confluence"]
 
+# patch
+COPY patch/server.xml ${CONF_INSTALL}/conf/server.xml
+COPY patch/atlassian-extras-decoder-v2-3.4.1.jar ${CONF_INSTALL}/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
+
 # Image Build Date By Buildsystem
 ARG BUILD_DATE=undefined
 
