@@ -77,12 +77,12 @@
                 <Context path="" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="true">
                     <!-- Logging configuration for Confluence is specified in confluence/WEB-INF/classes/log4j.properties -->
                     <Manager pathname=""/>
-                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="600"/>
+                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="1800"/>
                 </Context>
 
                 <Context path="${confluence.context.path}/synchrony-proxy" docBase="../synchrony-proxy" debug="0"
                          reloadable="false" useHttpOnly="true">
-                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="600"/>
+                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="1800"/>
                 </Context>
             </Host>
         </Engine>
